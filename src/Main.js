@@ -1,11 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-let pizzas = [{
-   id: 1, name: 'Cheese pizza', description: 'very cheesy'
- },
- {
-   id: 2, name: 'Al Tono pizza', description: 'lots of tuna'
-}];
 
 const Pizza = ({ pizza }) => {
    const [data, setData] = useState(pizza);
@@ -37,11 +31,25 @@ const Pizza = ({ pizza }) => {
 }
 
 const Main = () => {
+  const [pizzas, setPizzas] = useState([]);
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+  function fetchData() {
+    fetch("/pizza")
+      .then(response => response.json())
+      .then(data => setPizzas(data)) 
+  }
+
   const data = pizzas.map(pizza => <Pizza pizza={pizza} />)
 
   return (<React.Fragment>
-    {data}
+    {pizzas.length === 0 ?
+     <div>No pizzas</div> :
+     <div>{data}</div>
+    }
   </React.Fragment>)
-  }
+}
 
 export default Main;
